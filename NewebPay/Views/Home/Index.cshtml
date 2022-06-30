@@ -1,0 +1,132 @@
+﻿<h1>藍新金流串接範例</h1>
+<div class="card" id="app">
+    <div class="card-header">
+        API 欄位
+    </div>
+    <div class="card-body">
+        <div class="row mb-2">
+            <div class="col-md-6">
+                <label class="form-label">商店代號</label>
+                <input type="text" class="form-control" id="MerchantID" v-model="addForm.MerchantID">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">訂單編號</label>
+                <input type="text" class="form-control" id="MerchantOrderNo" v-model="addForm.MerchantOrderNo">
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-6">
+                <label class="form-label">商品說明</label>
+                <input type="text" class="form-control" id="ItemDesc" v-model="addForm.ItemDesc">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">商品金額</label>
+                <input type="text" class="form-control" id="Amt" v-model="addForm.Amt">
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-6">
+                <label class="form-label">繳費有效期限</label>
+                <input type="text" class="form-control" id="ExpireDate" v-model="addForm.ExpireDate">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">付款人電子信箱</label>
+                <input type="text" class="form-control" id="Email" v-model="addForm.Email">
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-6">
+                <label class="form-label">支付完成返回網址</label>
+                <input type="text" class="form-control" id="ReturnURL" v-model="addForm.ReturnURL">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">商店取號網址</label>
+                <input type="text" class="form-control" id="CustomerURL" v-model="addForm.CustomerURL">
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-6">
+                <label class="form-label">支付通知網址</label>
+                <input type="text" class="form-control" id="NotifyURL" v-model="addForm.NotifyURL">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">返回商店網址</label>
+                <input type="text" class="form-control" id="ClientBackURL" v-model="addForm.ClientBackURL">
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary" v-on:click="SendToNewebPay('VACC')">ATM 付款</button>
+    </div>
+</div>
+@section scripts {
+    <script>
+        const app = Vue.createApp({
+            data() {
+                return {
+                    // 表單資料
+                    addForm: {
+                        MerchantID: '@ViewData["MerchantID"]' //商品代號
+                        , MerchantOrderNo: '@ViewData["MerchantOrderNo"]'
+                        , ItemDesc: '測試商品'
+                        , Amt: '100'
+                        , ExpireDate: '@ViewData["ExpireDate"]'
+                        , ReturnURL: '@ViewData["ReturnURL"]'
+                        , CustomerURL: '@ViewData["CustomerURL"]'
+                        , NotifyURL: '@ViewData["NotifyURL"]'
+                        , ClientBackURL: '@ViewData["ClientBackURL"]'
+                        , Email: 'mars@hungwin.com.tw'
+                    }
+                }
+            }
+            , methods: {
+                // 傳送至藍新金流
+                SendToNewebPay(ChannelID) {
+                    var self = this;
+
+                    // 組合表單資料
+                    var postData = {};
+                    postData['ChannelID'] = ChannelID;
+                    postData['MerchantID'] = self.addForm.MerchantID;
+                    postData['MerchantOrderNo'] = self.addForm.MerchantOrderNo;
+                    postData['ItemDesc'] = self.addForm.ItemDesc;
+                    postData['Amt'] = self.addForm.Amt;
+                    postData['ExpireDate'] = self.addForm.ExpireDate;
+                    postData['ReturnURL'] = self.addForm.ReturnURL;
+                    postData['CustomerURL'] = self.addForm.CustomerURL;
+                    postData['NotifyURL'] = self.addForm.NotifyURL;
+                    postData['ClientBackURL'] = self.addForm.ClientBackURL;
+                    postData['Email'] = self.addForm.Email;
+
+                    // 使用 jQuery Ajax 傳送至後端
+                    $.ajax({
+                        url: '@Url.Content("~/Home/SendToNewebPay")',
+                        method: 'POST',
+                        dataType: 'json',
+                        data: { inModel: postData, __RequestVerificationToken: $('@Html.AntiForgeryToken()').val() },
+                        success: function(returnObj) {
+                            // 呼叫藍新金流 API
+                            const form = document.createElement('form');
+                            form.method = 'post';
+                            form.action = 'https://ccore.newebpay.com/MPG/mpg_gateway';//藍新金流驗證網址(測試環境)
+
+                            for (const key in returnObj) {
+                                if (returnObj.hasOwnProperty(key)) {
+                                    const hiddenField = document.createElement('input');
+                                    hiddenField.type = 'hidden';
+                                    hiddenField.name = key;
+                                    hiddenField.value = returnObj[key];
+                                    form.appendChild(hiddenField);
+                                }
+                            }
+                            document.body.appendChild(form);
+                            form.submit();
+                        },
+                        error: function(err) {
+                            alert(err.status + " " + err.statusText + '\n' + err.responseText);
+                        }
+                    });
+                }
+            }
+        });
+        const vm = app.mount('#app');
+    </script>
+}
