@@ -8640,11 +8640,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Project\\Hungwin\\Code\\Deploy\\Blog\\wordpress\\download\\TeachSourceCode\\NewebPay\\NewebPay\\NewebPay.csproj",
+      "projectUniqueName": "C:\\Users\\eerma\\Documents\\GitHub\\core-mvc-newebpay\\NewebPay\\NewebPay.csproj",
       "projectName": "NewebPay",
-      "projectPath": "D:\\Project\\Hungwin\\Code\\Deploy\\Blog\\wordpress\\download\\TeachSourceCode\\NewebPay\\NewebPay\\NewebPay.csproj",
+      "projectPath": "C:\\Users\\eerma\\Documents\\GitHub\\core-mvc-newebpay\\NewebPay\\NewebPay.csproj",
       "packagesPath": "C:\\Users\\eerma\\.nuget\\packages\\",
-      "outputPath": "D:\\Project\\Hungwin\\Code\\Deploy\\Blog\\wordpress\\download\\TeachSourceCode\\NewebPay\\NewebPay\\obj\\",
+      "outputPath": "C:\\Users\\eerma\\Documents\\GitHub\\core-mvc-newebpay\\NewebPay\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\eerma\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -8696,7 +8696,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.300\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.302\\RuntimeIdentifierGraph.json"
       }
     }
   }
